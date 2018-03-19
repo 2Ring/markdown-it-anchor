@@ -1,5 +1,5 @@
 const md = require('markdown-it')()
-const anchor = require('markdown-it-anchor')
+const anchor = require('./index')
 
 md.use(anchor, {
   level: 1,
@@ -11,12 +11,18 @@ md.use(anchor, {
   permalinkBefore: false
 })
 
-const src = `# First header
+const src = `
+# h1-1
 
-Lorem ipsum.
+## h2-1
+### h3-1
+### h3-2
 
-## Next section!
+## h2-2
 
-This is totaly awesome.`
+# h1-2
+
+## h2-1
+`
 
 console.log(md.render(src))

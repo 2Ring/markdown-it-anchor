@@ -61,6 +61,9 @@ const anchor = (md, opts) => {
       ? isLevelSelectedArray(opts.level)
       : isLevelSelectedNumber(opts.level)
 
+    const startingLevel = Array.isArray(opts.level) ? opts.level[0] : opts.level;
+    let formerHeaders = [];
+
     tokens
       .filter(token => token.type === 'heading_open')
       .filter(token => isLevelSelected(Number(token.tag.substr(1))))
@@ -70,10 +73,23 @@ const anchor = (md, opts) => {
           .filter(token => token.type === 'text' || token.type === 'code_inline')
           .reduce((acc, t) => acc + t.content, '')
 
+        const currentLevel = Number(token.tag.substr(1));
+        if (currentLevel === startingLevel) {
+          formerHeaders = [title];
+        }
+        else {
+          if (startingLevel + formerHeaders.length - 1 >= currentLevel) {
+            while (startingLevel + formerHeaders.length - 1 >= currentLevel) {
+              formerHeaders.pop();
+            }
+          }
+          formerHeaders.push(title);
+        }
+
         let slug = token.attrGet('id')
 
         if (slug == null) {
-          slug = uniqueSlug(opts.slugify(title), slugs)
+          slug = uniqueSlug(opts.slugify(formerHeaders.join(" ")), slugs)
           token.attrPush(['id', slug])
         }
 
