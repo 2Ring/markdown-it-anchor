@@ -1,6 +1,7 @@
-# markdown-it-anchor [![npm version](http://img.shields.io/npm/v/markdown-it-anchor.svg?style=flat-square)](https://www.npmjs.org/package/markdown-it-anchor)
+# markdown-it-anchor
 
 > Header anchors for [markdown-it].
+>> Custom fork of the markdown-it-anchor plugin.
 
 [markdown-it]: https://github.com/markdown-it/markdown-it
 
@@ -29,6 +30,9 @@ Name              | Description                                                 
 `callback`        | Called with token and info after rendering.                    | `undefined`
 
 [slugify]: http://stringjs.com/#methods/slugify
+
+Nested headers are generated with the anchors being a combination of all parent headers located in the level array.
+The nested headers must follow the correct hierarchy. No headers can be skipped, thus h1 directly to h3 will break anchoring.
 
 The `renderPermalink` function takes the slug, an options object with
 the above options, and then all the usual markdown-it rendering
