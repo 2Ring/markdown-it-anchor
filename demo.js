@@ -11,7 +11,7 @@ md.use(anchor, {
   permalinkClass: 'header-anchor',
   permalinkSymbol: '¶',
   permalinkBefore: false,
-  returnedToc: tocObject
+  toc: tocObject
 })
 
 const src = `

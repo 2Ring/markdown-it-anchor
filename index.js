@@ -124,9 +124,9 @@ const anchor = (md, opts) => {
         for (let i = 0; i < title.depth; i++) {
           compositeToc += '  '
         }
-        compositeToc += '- [' + title.title + '](' + title.id + ')\n'
+        compositeToc += '- [' + title.title + '](#' + title.id + ')\n'
       })
-      opts.returnedToc.result = markdownit.render(compositeToc)
+      opts.toc.result = markdownit.render(compositeToc)
   })
 }
 
@@ -139,7 +139,7 @@ anchor.defaults = {
   permalinkSymbol: '¶',
   permalinkBefore: false,
   permalinkHref,
-  returnedToc: {}
+  toc: {}
 }
 
 module.exports = anchor
