@@ -1,4 +1,5 @@
 const string = require('string')
+const markdownit = require('markdown-it')()
 
 const slugify = s =>
   string(s).slugify().toString()
@@ -34,6 +35,16 @@ const renderPermalink = (slug, opts, state, idx) => {
   state.tokens[idx + 1].children[position[opts.permalinkBefore]](...linkTokens)
 }
 
+const getTocToken = (tokens) => {
+  tocToken = null;
+  tokens.forEach((token) => {
+    if (token.content === "<!-- TABLE OF CONTENTS -->") {
+      tocToken = token
+    }
+  })
+  return tocToken
+}
+
 const uniqueSlug = (slug, slugs) => {
   // Mark this slug as used in the environment.
   slugs[slug] = (hasProp.call(slugs, slug) ? slugs[slug] : 0) + 1
@@ -63,6 +74,7 @@ const anchor = (md, opts) => {
 
     const startingLevel = Array.isArray(opts.level) ? opts.level[0] : opts.level;
     let formerHeaders = [];
+    let tocTitles = [];
 
     tokens
       .filter(token => token.type === 'heading_open')
@@ -73,17 +85,17 @@ const anchor = (md, opts) => {
           .filter(token => token.type === 'text' || token.type === 'code_inline')
           .reduce((acc, t) => acc + t.content, '')
 
-        const currentLevel = Number(token.tag.substr(1));
+        const currentLevel = Number(token.tag.substr(1))
         if (currentLevel === startingLevel) {
-          formerHeaders = [title];
+          formerHeaders = [title]
         }
         else {
           if (startingLevel + formerHeaders.length - 1 >= currentLevel) {
             while (startingLevel + formerHeaders.length - 1 >= currentLevel) {
-              formerHeaders.pop();
+              formerHeaders.pop()
             }
           }
-          formerHeaders.push(title);
+          formerHeaders.push(title)
         }
 
         let slug = token.attrGet('id')
@@ -93,6 +105,12 @@ const anchor = (md, opts) => {
           token.attrPush(['id', slug])
         }
 
+        tocTitles.push({
+          title: title,
+          id: slug,
+          depth: currentLevel - startingLevel
+        })
+
         if (opts.permalink) {
           opts.renderPermalink(slug, opts, state, tokens.indexOf(token))
         }
@@ -101,6 +119,14 @@ const anchor = (md, opts) => {
           opts.callback(token, { slug, title })
         }
       })
+      let compositeToc = '## Table of contents\n'
+      tocTitles.forEach((title) => {
+        for (let i = 0; i < title.depth; i++) {
+          compositeToc += '  '
+        }
+        compositeToc += '- [' + title.title + '](#' + title.id + ')\n'
+      })
+      opts.toc.result = markdownit.render(compositeToc)
   })
 }
 
@@ -112,7 +138,8 @@ anchor.defaults = {
   permalinkClass: 'header-anchor',
   permalinkSymbol: '¶',
   permalinkBefore: false,
-  permalinkHref
+  permalinkHref,
+  toc: {}
 }
 
 module.exports = anchor

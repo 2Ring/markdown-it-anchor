@@ -1,6 +1,6 @@
 {
   "name": "markdown-it-anchor-2ring",
-  "version": "4.0.1",
+  "version": "4.0.2",
   "description": "Header anchors for markdown-it.",
   "keywords": [
     "markdown-it-plugin"
@@ -21,10 +21,10 @@
     "url": "https://github.com/Radcho/markdown-it-anchor.git"
   },
   "dependencies": {
-    "string": "^3.3.3"
+    "string": "^3.3.3",
+    "markdown-it": "^8.3.0"
   },
   "devDependencies": {
-    "markdown-it": "^8.3.0",
     "markdown-it-attrs": "^0.8.0",
     "standard": "^8.6.0"
   },
