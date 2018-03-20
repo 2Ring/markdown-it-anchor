@@ -11,7 +11,7 @@ md.use(anchor, {
   permalinkClass: 'header-anchor',
   permalinkSymbol: '¶',
   permalinkBefore: false,
-  returnedToc: ttt
+  returnedToc: tocObject
 })
 
 const src = `
@@ -30,4 +30,4 @@ const src = `
 `
 
 const mid = md.render(src);
-console.log(mid.replace('<p>TABLE OF CONTENTS</p>', ttt.result))
+console.log(mid.replace('<p>%TABLE_OF_CONTENTS%</p>', tocObject.result))
