@@ -1,9 +1,13 @@
 {
   "name": "markdown-it-anchor-2ring",
-  "version": "4.0.2",
+  "version": "5.0.2",
   "description": "Header anchors for markdown-it.",
   "keywords": [
-    "markdown-it-plugin"
+    "markdown",
+    "markdown-it",
+    "markdown-it-plugin",
+    "header",
+    "anchor"
   ],
   "homepage": "https://github.com/Radcho/markdown-it-anchor",
   "license": "Unlicense",
@@ -14,19 +18,21 @@
     "README.md",
     "UNLICENSE",
     "index.js",
-    "demo.js"
+    "runkit.js"
   ],
   "repository": {
     "type": "git",
     "url": "https://github.com/Radcho/markdown-it-anchor.git"
   },
   "dependencies": {
-    "string": "^3.3.3",
     "markdown-it": "^8.3.0"
   },
+  "runkitExampleFilename": "runkit.js",
   "devDependencies": {
     "markdown-it-attrs": "^0.8.0",
-    "standard": "^8.6.0"
+    "standard": "^11.0.1"
   },
-  "tonicExampleFilename": "demo.js"
+  "peerDependencies": {
+    "markdown-it": "^8.4.1"
+  }
 }
