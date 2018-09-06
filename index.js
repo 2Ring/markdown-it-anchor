@@ -35,7 +35,7 @@ const renderPermalink = (slug, opts, state, idx) => {
 const getTocToken = (tokens) => {
   tocToken = null;
   tokens.forEach((token) => {
-    if (token.content === "<!-- TABLE OF CONTENTS -->") {
+    if (token.content === "%TABLE_OF_CONTENTS%") {
       tocToken = token
     }
   })
@@ -56,9 +56,18 @@ const isLevelSelectedArray = selection => level => selection.includes(level)
 const anchor = (md, opts) => {
   opts = Object.assign({}, anchor.defaults, opts)
 
+  var tocTitles = [];
+
   md.core.ruler.push('anchor', state => {
     const slugs = {}
     const tokens = state.tokens
+
+    let tocIndex = tokens.indexOf(getTocToken(tokens));
+    let opening = tokens[tocIndex - 1];
+    let closing = tokens[tocIndex + 1];
+    tokens[tocIndex].type = 'toc_container'
+    tokens.splice(tokens.indexOf(opening), 1)
+    tokens.splice(tokens.indexOf(closing), 1)
 
     const isLevelSelected = Array.isArray(opts.level)
       ? isLevelSelectedArray(opts.level)
@@ -66,7 +75,6 @@ const anchor = (md, opts) => {
 
     const startingLevel = Array.isArray(opts.level) ? opts.level[0] : opts.level;
     let formerHeaders = [];
-    let tocTitles = [];
 
     tokens
       .filter(token => token.type === 'heading_open')
@@ -111,15 +119,19 @@ const anchor = (md, opts) => {
           opts.callback(token, { slug, title })
         }
       })
-      let compositeToc = '## Table of contents\n'
-      tocTitles.forEach((title) => {
-        for (let i = 0; i < title.depth; i++) {
-          compositeToc += '  '
-        }
-        compositeToc += '- [' + title.title + '](#' + title.id + ')\n'
-      })
-      opts.toc.result = markdownit.render(compositeToc)
   })
+
+  md.renderer.rules['toc_container'] = (tokens, idx, _opts, _env, self) => {
+    let compositeToc = '## Table of contents\n'
+    tocTitles.forEach((title) => {
+      for (let i = 0; i < title.depth; i++) {
+        compositeToc += '  '
+      }
+      compositeToc += '- [' + title.title + '](#' + title.id + ')\n'
+    })
+
+    return markdownit.render(compositeToc)
+  }
 }
 
 anchor.defaults = {
@@ -130,8 +142,7 @@ anchor.defaults = {
   permalinkClass: 'header-anchor',
   permalinkSymbol: '¶',
   permalinkBefore: false,
-  permalinkHref,
-  toc: {}
+  permalinkHref
 }
 
 module.exports = anchor

@@ -29,5 +29,4 @@ const src = `
 ## h2-1
 `
 
-const mid = md.render(src);
-console.log(mid.replace('<p>%TABLE_OF_CONTENTS%</p>', tocObject.result))
+console.log(md.render(src));

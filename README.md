@@ -27,7 +27,6 @@ Name              | Description                                                 
 `permalinkBefore` | Place the permalink before the title.                          | `false`
 `permalinkHref`   | A custom permalink `href` rendering function.                  | See [`index.js`](index.js)
 `callback`        | Called with token and info after rendering.                    | `undefined`
-`toc`             | Object used for saving the generated TOC in `toc.result`.      | `{}`
 
 [slugify]: http://stringjs.com/#methods/slugify
 
