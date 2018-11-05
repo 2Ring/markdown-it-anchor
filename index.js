@@ -62,12 +62,17 @@ const anchor = (md, opts) => {
     const slugs = {}
     const tokens = state.tokens
 
-    let tocIndex = tokens.indexOf(getTocToken(tokens));
-    let opening = tokens[tocIndex - 1];
-    let closing = tokens[tocIndex + 1];
-    tokens[tocIndex].type = 'toc_container'
-    tokens.splice(tokens.indexOf(opening), 1)
-    tokens.splice(tokens.indexOf(closing), 1)
+    const tocToken = getTocToken(tokens);
+    const titles = [];
+
+    if (tocToken) {
+      let tocIndex = tokens.indexOf(tocToken);
+      let opening = tokens[tocIndex - 1];
+      let closing = tokens[tocIndex + 1];
+      tokens[tocIndex].type = 'toc_container'
+      tokens.splice(tokens.indexOf(opening), 1)
+      tokens.splice(tokens.indexOf(closing), 1)
+    }
 
     const isLevelSelected = Array.isArray(opts.level)
       ? isLevelSelectedArray(opts.level)
@@ -105,7 +110,7 @@ const anchor = (md, opts) => {
           token.attrPush(['id', slug])
         }
 
-        tocTitles.push({
+        titles.push({
           title: title,
           id: slug,
           depth: currentLevel - startingLevel
@@ -119,6 +124,8 @@ const anchor = (md, opts) => {
           opts.callback(token, { slug, title })
         }
       })
+
+      tocTitles = titles
   })
 
   md.renderer.rules['toc_container'] = (tokens, idx, _opts, _env, self) => {
