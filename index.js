@@ -129,7 +129,8 @@ const anchor = (md, opts) => {
   })
 
   md.renderer.rules['toc_container'] = (tokens, idx, _opts, _env, self) => {
-    let compositeToc = '## Table of contents\n'
+    let tocPrefix = new Array(opts.tocLevel).fill('#').join('')
+    let compositeToc = tocPrefix + ' Table of contents\n'
     tocTitles.forEach((title) => {
       for (let i = 0; i < title.depth; i++) {
         compositeToc += '  '
@@ -149,7 +150,8 @@ anchor.defaults = {
   permalinkClass: 'header-anchor',
   permalinkSymbol: '¶',
   permalinkBefore: false,
-  permalinkHref
+  permalinkHref,
+  tocLevel: 2
 }
 
 module.exports = anchor
