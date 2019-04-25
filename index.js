@@ -50,13 +50,29 @@ const uniqueSlug = (slug, slugs) => {
   return uniq
 }
 
+const generateTocText = (titles, tocLevel) => {
+  let compositeToc = "";
+  if (tocLevel !== null) {
+    let tocPrefix = new Array(tocLevel).fill('#').join('')
+    compositeToc += tocPrefix + ' Table of contents\n'
+  }
+  titles.forEach((title) => {
+    for (let i = 0; i < title.depth; i++) {
+      compositeToc += '  '
+    }
+    compositeToc += '- [' + title.title + '](#' + title.id + ')\n'
+  })
+
+  return markdownit.render(compositeToc)
+}
+
 const isLevelSelectedNumber = selection => level => level >= selection
 const isLevelSelectedArray = selection => level => selection.includes(level)
 
 const anchor = (md, opts) => {
   opts = Object.assign({}, anchor.defaults, opts)
 
-  var tocTitles = [];
+  let tocTitles = [];
 
   md.core.ruler.push('anchor', state => {
     const slugs = {}
@@ -126,19 +142,11 @@ const anchor = (md, opts) => {
       })
 
       tocTitles = titles
+      opts.toc.toc = generateTocText(tocTitles, opts.tocLevel);
   })
 
   md.renderer.rules['toc_container'] = (tokens, idx, _opts, _env, self) => {
-    let tocPrefix = new Array(opts.tocLevel).fill('#').join('')
-    let compositeToc = tocPrefix + ' Table of contents\n'
-    tocTitles.forEach((title) => {
-      for (let i = 0; i < title.depth; i++) {
-        compositeToc += '  '
-      }
-      compositeToc += '- [' + title.title + '](#' + title.id + ')\n'
-    })
-
-    return markdownit.render(compositeToc)
+    return generateTocText(tocTitles, opts.tocLevel);
   }
 }
 
@@ -151,7 +159,8 @@ anchor.defaults = {
   permalinkSymbol: '¶',
   permalinkBefore: false,
   permalinkHref,
-  tocLevel: 2
+  tocLevel: 2,
+  toc: { toc: undefined }
 }
 
 module.exports = anchor

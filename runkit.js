@@ -10,7 +10,9 @@ md.use(anchor, {
   // renderPermalink: (slug, opts, state, permalink) => {},
   permalinkClass: 'header-anchor',
   permalinkSymbol: '¶',
-  permalinkBefore: false
+  permalinkBefore: false,
+  tocLevel: null,
+  toc: tocObject
 })
 
 const src = `
@@ -29,3 +31,4 @@ const src = `
 `
 
 console.log(md.render(src));
+console.log(tocObject);
