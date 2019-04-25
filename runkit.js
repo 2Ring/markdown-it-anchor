@@ -12,7 +12,8 @@ md.use(anchor, {
   permalinkSymbol: '¶',
   permalinkBefore: false,
   tocLevel: null,
-  toc: tocObject
+  toc: tocObject,
+  filename: 'test.html'
 })
 
 const src = `

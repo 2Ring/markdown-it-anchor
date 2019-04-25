@@ -29,6 +29,7 @@ Name              | Description                                                 
 `callback`        | Called with token and info after rendering.                               | `undefined`
 `tocLevel`        | Heading level for the generated table of contents. `null` for no heading. | 2
 `toc`             | Object with the `toc` property, containing the table of contents.         | `{ toc: undefined }`
+`filename`        | Prefixes the anchor with a filename, it will link to that file.           | `""`
 
 [slugify]: http://stringjs.com/#methods/slugify
 

@@ -50,7 +50,7 @@ const uniqueSlug = (slug, slugs) => {
   return uniq
 }
 
-const generateTocText = (titles, tocLevel) => {
+const generateTocText = (titles, tocLevel, anchorPrefix) => {
   let compositeToc = "";
   if (tocLevel !== null) {
     let tocPrefix = new Array(tocLevel).fill('#').join('')
@@ -60,7 +60,7 @@ const generateTocText = (titles, tocLevel) => {
     for (let i = 0; i < title.depth; i++) {
       compositeToc += '  '
     }
-    compositeToc += '- [' + title.title + '](#' + title.id + ')\n'
+    compositeToc += '- [' + title.title + '](' + anchorPrefix + '#' + title.id + ')\n'
   })
 
   return markdownit.render(compositeToc)
@@ -142,11 +142,11 @@ const anchor = (md, opts) => {
       })
 
       tocTitles = titles
-      opts.toc.toc = generateTocText(tocTitles, opts.tocLevel);
+      opts.toc.toc = generateTocText(tocTitles, opts.tocLevel, opts.filename);
   })
 
   md.renderer.rules['toc_container'] = (tokens, idx, _opts, _env, self) => {
-    return generateTocText(tocTitles, opts.tocLevel);
+    return generateTocText(tocTitles, opts.tocLevel, opts.filename);
   }
 }
 
@@ -160,7 +160,8 @@ anchor.defaults = {
   permalinkBefore: false,
   permalinkHref,
   tocLevel: 2,
-  toc: { toc: undefined }
+  toc: { toc: undefined },
+  filename: ''
 }
 
 module.exports = anchor
